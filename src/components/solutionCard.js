@@ -19,34 +19,29 @@ const SolutionCard = ({scramble, color, subset, inspection, face, alg, method, d
 
         const scrambleLine = `${scramble}\n`;
         let inspectionLine = inspection.toLowerCase();
-        for (var i = 0; i < (longest - inspection.length) / 3.75; i++) {
-            inspectionLine += "\t";
-        }
-        inspectionLine += "\t\t\t// inspection\n";
+        // for (var i = 0; i < (longest - inspection.length) / 3.75; i++) {
+        //     inspectionLine += "\t";
+        // }
+        inspectionLine += "\t\t// inspection\n";
 
         let faceLine = face;
-        for (var i = 0; i < (longest - face.length) / 3.75; i++) {
-            faceLine += "\t";
-        }
+        // for (var i = 0; i < (longest - face.length) / 3.75; i++) {
+        //     faceLine += "\t";
+        // }
 
-        console.log(faceLine.length);
-
-        faceLine += `\t\t\t// ${method === METHODS.CLL ? 'layer' : 'face'}\n`;
+        faceLine += `\t\t// ${method === METHODS.CLL ? 'layer' : 'face'}\n`;
 
         let algLine = alg;
-        console.log("tabs: " + (longest - alg.length)/3.75);
-        for (var i = 0; i < 1 + ((longest - alg.length) /3.75); i++) {
-            algLine += "\t";
-        }
-        console.log(algLine.length);
+        // for (var i = 0; i < 1 + ((longest - alg.length) /3.75); i++) {
+        //     algLine += "\t";
+        // }
 
-        algLine += `\t\t\t// ${method}\n`;
+        algLine += `\t\t// ${method}\n`;
 
         const text = scrambleLine + inspectionLine + faceLine + algLine;
 
         try {
           await navigator.clipboard.writeText(text);
-          console.log(text)
         } catch (error) {
           alert('Error copying to clipboard:' + error);
         }
