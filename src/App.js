@@ -11,23 +11,22 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Search from '@mui/icons-material/Search';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
-
-
 import GridViewIcon from '@mui/icons-material/GridView';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import AlgSorter from './util/algSorter';
 import SkeletonSolutionCard from './components/skeletonSolutionCard';
 import HelpModal from './components/helpModal';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [algSorter, setAlgSorter] = useState(undefined);
   const [solutions, setSolutions] = useState([]);
-
   const [scramble, setScramble] = useState('');
   const [imageScramble, setImageScramble] = useState('');
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
   const workerRef = useRef();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(
     () => {
       const saved = localStorage.getItem("selected");
@@ -88,9 +87,18 @@ function App() {
   };
 
   const receiveWorker = (message) => {
-    const workerResponse = JSON.parse(message.data);
+    let workerResponse = JSON.parse(message.data);
     workerResponse.sort((a, b) => algSorter.getScore(a) - algSorter.getScore(b));
-
+    let prev;
+    workerResponse = workerResponse.filter(elem => {
+      console.log(elem.solution);
+      if ((elem.shouldDelete) || (prev && (elem.color === prev.color) && (elem.alg === prev.alg) && (elem.face === prev.face))) {
+          return false;
+      } else {
+          prev = elem;
+          return true;
+      }
+    });
     setShouldUpdate(false);
     setLoading(false);
     setSolutions(workerResponse);
@@ -160,12 +168,15 @@ function App() {
 
   const submitScramble = () => {
     if (scramble.length > 0) {
-      setImageScramble(scramble.replaceAll("’", "'"));
+      const newScram = scramble.replaceAll("’", "'");
+      setImageScramble(newScram);
+      // navigate(`/?alg=${newScram}`);
       setSubmitted(true);
       setLoading(true);
       setShouldUpdate(true);
     }
   };
+
 
   const getVars = (color) => {
     return {
@@ -193,6 +204,7 @@ function App() {
     colorSchemes: {
       light: {
         palette: {
+          theme1: "#5EA0FD",
           blue: {
             50: "#e2f2ff",
             100: "#baddff",
@@ -412,7 +424,7 @@ function App() {
               </Grid>
             </Grid>
             </Sheet>  
-          <Stack direction="row" flexWrap="wrap" justifyContent="center" spacing={1} sx={{overflow: 'hidden', overflowY: 'scroll', maxHeight: '100%'}}>
+          <Stack direction="row" flexWrap="wrap" justifyContent="center" spacing={1} sx={{overflow: 'hidden', overflowY: 'auto', maxHeight: '100%'}}>
             <Stack direction="column">
               <Card sx={{padding:'0px', border: '0'}}>
                 <Box height={"35px"} padding={0} display="flex" flexDirection="column" alignItems="center">
@@ -432,7 +444,7 @@ function App() {
                       >
                      twisty-player by Lucas Garron</Link></Stack>
             </Stack>
-            <Box id="rightCol" display="flex" justifyContent="center" sx={{overflowY: 'scroll', maxHeight: '100%'}}>
+            <Box id="rightCol" display="flex" justifyContent="center" sx={{overflowY: 'auto', maxHeight: '100%'}}>
             <Stack alignItems="center" paddingLeft={1} paddingRight={2} spacing={1} overflow="hidden" direction="column" sx={{
               // height: '100%'
               maxHeight:'100%',
@@ -472,14 +484,14 @@ function App() {
                   </Stack>
                 </Stack>
               </Card>
-              <Sheet sx={{overflowY: 'scroll', marginTop: '0px !Important', maxWidth:'360px',
+              <Sheet sx={{overflowY: 'auto', marginTop: '0px !Important', maxWidth:'360px',
               minWidth: '300px', width: "100%"}}>
-                <Stack direction="column" width={"100%"} spacing={1} paddingTop={1} paddingBottom={1} sx={{overflowY: 'scroll'}}>
+                <Stack direction="column" width={"100%"} spacing={1} paddingTop={1} paddingBottom={1} sx={{overflowY: 'auto', boxSizing: 'border-box', paddingLeft: '2px', paddingRight: '3px'}}>
                   { !loading && solutions.filter(
                     solution => selected[solution.method] && checkedColorList[solution.color] && depths[solution.methodGroup] >= solution.depth && depths['ALG'] > solution.algNumber 
                     )
                     .slice(0, 50).map((solution, index) =>  
-                    <SolutionCard key={index} color='green' {...solution} />
+                    <SolutionCard key={index} color='green' {...solution} scramble={scramble} />
                     ) }
                     {/* loading false solitions 0 submitted */}
                   { !loading && solutions.filter(

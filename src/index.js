@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 // import '@fontsource/inter';
 import { getSolutions } from './util/solver';
 import { extendTheme } from '@mui/joy';
-
+import { BrowserRouter as Router } from 'react-router-dom'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 // const appTheme = extendTheme({
     
@@ -14,7 +14,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>
 );
 
