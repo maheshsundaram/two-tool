@@ -17,6 +17,32 @@ import AlgSorter from './util/algSorter';
 import SkeletonSolutionCard from './components/skeletonSolutionCard';
 import HelpModal from './components/helpModal';
 import { useNavigate } from 'react-router-dom';
+import { AwsRum } from 'aws-rum-web';
+
+const awsRum = null;
+try {
+  const config = {
+    sessionSampleRate: 1,
+    identityPoolId: "us-east-2:6baa256c-694f-46d9-8c4b-abed70a26e7d",
+    endpoint: "https://dataplane.rum.us-east-2.amazonaws.com",
+    telemetries: ["performance","errors","http"],
+    allowCookies: true,
+    enableXRay: false
+  };
+
+  const APPLICATION_ID = 'ddf82aa2-85b8-4b0c-9a68-d049fe3641f4';
+  const APPLICATION_VERSION = '1.0.0';
+  const APPLICATION_REGION = 'us-east-2';
+
+  awsRum = new AwsRum(
+    APPLICATION_ID,
+    APPLICATION_VERSION,
+    APPLICATION_REGION,
+    config
+  );
+} catch (error) {
+  // Ignore errors thrown during CloudWatch RUM web client initialization
+}
 
 function App() {
   const [algSorter, setAlgSorter] = useState(undefined);
@@ -84,6 +110,11 @@ function App() {
       tcllDepth: depths['TCLL'], 
       lsDepth: depths['LS']
     }));
+    awsRum.recordEvent({
+      type: 'search', 
+      data: {
+          scramble: scramble
+      }})
   };
 
   const receiveWorker = (message) => {
