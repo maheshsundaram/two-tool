@@ -25,8 +25,8 @@ try {
     sessionSampleRate: 1,
     identityPoolId: "us-east-2:6baa256c-694f-46d9-8c4b-abed70a26e7d",
     endpoint: "https://dataplane.rum.us-east-2.amazonaws.com",
-    telemetries: ["performance","errors","http"],
-    allowCookies: true,
+    telemetries: [],
+    allowCookies: false,
     enableXRay: false
   };
 
