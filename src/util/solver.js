@@ -18,7 +18,6 @@ export const getSolutions = ({scramble, egDepth, tcllDepth, lsDepth}) => {
         TCLL: tcllDepth,
         LS: lsDepth
     };
-    console.log(depths);
 
     scramble.split(' ').forEach(move => {
         stickers = stickers.map((color) => color.map(elem => MOVE_FUNCTIONS[move](elem)));
@@ -42,7 +41,6 @@ export const getSolutions = ({scramble, egDepth, tcllDepth, lsDepth}) => {
 
     const all = new Set([ ...white, ...blue, ...orange, ...green, ...red, ...yellow]);
     const clean = new Set();
-    console.log("original: ", all.size);
     all.forEach(elem => { 
         // if (elem.color === 'b' && elem.rotation_1 === 'Z' && elem.rotation_2 === 'Y\'' && elem.moves.length === 4 && elem.methodGroup === 'TCLL') {
         //     console.log("found it");
@@ -61,7 +59,6 @@ export const getSolutions = ({scramble, egDepth, tcllDepth, lsDepth}) => {
         }
     });
     let arr = [ ...clean ];
-    console.log("clean: ", arr.length);
     arr.sort((a, b) => { 
         let xx = getDepth(a.face.split(' ')) + getDepth(a.alg.split(' ')) - getDepth(b.face.split(' ')) - getDepth(b.alg.split(' '));
 
@@ -82,7 +79,6 @@ export const getSolutions = ({scramble, egDepth, tcllDepth, lsDepth}) => {
         }
     });
     
-    console.log("Maximized", arr.length);
     // arr.forEach(e => {
     //     console.log(e.solution);
     // });
@@ -135,7 +131,6 @@ export const performSearch = (stickers, r1, r2, solutions, color, depths) => {
     });
     let backNetFrontier = getInitialBackFrontier();
     lookForFace(solutions, backNet, [...frontier][0], r1, r2, color);
-    console.log(solutions);
 
 
     for (let iteration = 1; iteration <= (depths.maxDepth + 1) / 2; iteration++) {
@@ -715,9 +710,7 @@ const matchAndApplyAlgorithm = (solution) => {
         let opposite = OPPOSITE_COLOR[solution.color]
         const aufs = ['', 'U', 'U2', 'U\''];
         const solutions = [];
-        if (solution.color === 'y' && solution.methodGroup==='EG' && solution.moves.length < 2) {
-            console.log(solution);
-        }
+
         aufs.forEach(auf => {
             if (!identified) {
                 const [aufedStickers, aufedState] = applyAuf(solution.stickers, auf);

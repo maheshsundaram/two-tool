@@ -122,7 +122,6 @@ function App() {
     workerResponse.sort((a, b) => algSorter.getScore(a) - algSorter.getScore(b));
     let prev;
     workerResponse = workerResponse.filter(elem => {
-      console.log(elem.solution);
       if ((elem.shouldDelete) || (prev && (elem.color === prev.color) && (elem.alg === prev.alg) && (elem.face === prev.face))) {
           return false;
       } else {
