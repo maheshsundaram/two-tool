@@ -111,11 +111,11 @@ function App() {
       tcllDepth: depths['TCLL'], 
       lsDepth: depths['LS']
     }));
-    awsRum.recordEvent({
-      type: 'search', 
-      data: {
+    awsRum.recordEvent(
+      'search', 
+      {
           scramble: scramble
-      }})
+      })
   };
 
   const receiveWorker = (message) => {
