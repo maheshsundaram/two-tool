@@ -19,7 +19,7 @@ import HelpModal from './components/helpModal';
 import { useNavigate } from 'react-router-dom';
 import { AwsRum } from 'aws-rum-web';
 
-const awsRum = null;
+let awsRum = null;
 try {
   const config = {
     sessionSampleRate: 1,
